@@ -699,3 +699,53 @@ off_temp_ly  +scale_y_continuous(position = "right",breaks=seq(-0.6, 0.6, 0.3),l
 
 ```
 
+## Figure - body weight vs immune activity
+
+# Sex colours (kept different from your blue/red temperature colours)
+sex_cols <- c("female" = "red", "male" = "blue")
+
+# Shared styling to match your other figures
+weight_theme <- theme_classic() +
+  theme(
+    axis.line = element_blank(),
+    panel.border = element_rect(colour = "black",
+                                fill = NA,
+                                linewidth = 1)
+  )
+
+####################
+## PO activity    ##
+####################
+W1 <- ggplot(po_corrected, aes(x = weight, y = log_po_corrected,
+                               colour = sex, fill = sex)) +
+  geom_point(shape = 21, colour = "grey30", stroke = 0.3,
+             size = 1.8) +                                  # black outline on dots only
+  geom_smooth(method = "lm", formula = y ~ x, se = TRUE,
+              linewidth = 1, alpha = 0.2) +                 # line keeps sex colour
+  scale_colour_manual(values = sex_cols) +                  # line colours
+  scale_fill_manual(values = alpha(sex_cols, 0.6)) +        # dot + ribbon fill
+  labs(x = "body weight (mg)",
+       y = "PO activitiy\n(log-transformed)",
+       colour = "sex", fill = "sex") +
+  weight_theme
+
+W1 + theme(legend.position = "none")
+
+####################
+## Lytic activity ##
+####################
+W2 <- ggplot(lytic_corrected, aes(x = weight, y = lytic_corrected,
+                                  colour = sex, fill = sex)) +
+  geom_point(shape = 21, colour = "black", stroke = 0.3,
+             size = 1.5) +
+  geom_smooth(method = "lm", formula = y ~ x, se = TRUE,
+              linewidth = 1, alpha = 0.2) +
+  scale_colour_manual(values = sex_cols) +
+  scale_fill_manual(values = alpha(sex_cols, 0.4)) +
+  labs(x = "body weight (mg)",
+       y = "lytic activity",
+       colour = "sex", fill = "sex") +
+  weight_theme
+
+W2
+```
